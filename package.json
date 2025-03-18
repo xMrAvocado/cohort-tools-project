@@ -16,5 +16,8 @@
     "url": "https://github.com/xMrAvocado/cohort-tools-project/issues"
   },
   "homepage": "https://github.com/xMrAvocado/cohort-tools-project#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "mongoose": "^8.12.1"
+  }
 }
