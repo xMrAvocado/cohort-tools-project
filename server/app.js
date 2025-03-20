@@ -90,8 +90,8 @@ app.get("/api/students", async (req, res, next) => {
   
   
   try{
-    
-  console.log(patata)
+
+  //console.log(patata)
   const response =  await  Student.find().populate("cohort")
     res.status(200).json(response)
 
