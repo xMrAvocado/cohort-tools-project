@@ -15,8 +15,8 @@ const Cohort = require(`./models/Cohort.model`)
 const Student = require(`./models/Student.model`)
 
 // CONECTAMOS MONGOOSE
-// mongoose.connect("mongodb://127.0.0.1:27017/cohort-tools-api")
-mongoose.connect("mongodb+srv://chaconsaavedrakurt:HAzQRqA7pDss402W@cluster0.9aj03.mongodb.net/cohort-tools-api?retryWrites=true&w=majority&appName=Cluster0")
+mongoose.connect("mongodb://127.0.0.1:27017/cohort-tools-api")
+//mongoose.connect("mongodb+srv://chaconsaavedrakurt:HAzQRqA7pDss402W@cluster0.9aj03.mongodb.net/cohort-tools-api?retryWrites=true&w=majority&appName=Cluster0")
 .then(x => console.log(`Connected to Database`))
 .catch(err => console.error("Error connecting to MongoDB cohorts", err))
 
@@ -62,8 +62,8 @@ app.get("/docs", (req, res) => {
 // })
 
 
-//crear estudiante
-app.post("/api/students",async (req, res) => {
+//crear estudiante (FUNCIONA)
+app.post("/api/students",async (req, res, next) => {
 try{
   const created = await Student.create({
     firstName: req.body.firstName,
@@ -81,49 +81,50 @@ try{
   res.status(201).json(created)
 }
 catch (error){
-  console.log(error)
-  es.status(500).json("Error creando estudiante")
+    next(error)
 }
 })
 
-//recuperar todos los estudiantes
-app.get("/api/students", async (req, res) => {
+//recuperar todos los estudiantes (FUNCIONA)
+app.get("/api/students", async (req, res, next) => {
+  
+  console.log(patata)
   try{
   const response =  await  Student.find().populate("cohort")
-    res.json(response)
+    res.status(200).json(response)
 
   }
   catch (error){
-    console.log(error) 
+    next(error) 
   }
 })
 
-//recuperar los estudiantes de un cohort determinada (id)
+//recuperar los estudiantes de un cohort determinada (id) (FUNCIONA)
 
-app.get("/api/students/cohort/:cohortId", async (req, res) => {
+app.get("/api/students/cohort/:cohortId", async (req, res, next) => {
   try{
     const response = await Student.find({cohort: req.params.cohortId}).populate("cohort")
-    res.json(response)
+    res.status(200).json(response)
   }
   catch (error){
-    console.log(error)
+    next(error)
   }
 })
 
-//recupera un estudiante id
-app.get("/api/students/:studentId", async (req, res) => {
+//recupera un estudiante id (FUNCIONA)
+app.get("/api/students/:studentId", async (req, res, next) => {
   try{
     const response = await Student.findById(req.params.studentId).populate("cohort")
-    res.json(response)
+    res.status(200).json(response)
     
   }
   catch (error){
-    console.log(error)
+    next(error)
   }
 })
 
-//!actualizar un estudianto por ID
-app.put("/api/students/:studentId",async (req, res) => {
+// Actualizar un estudianto por ID (FUNCIONA)
+app.put("/api/students/:studentId",async (req, res, next) => {
   try{
     const response = await Student.findByIdAndUpdate(req.params.studentId, {
       firstName: req.body.firstName,
@@ -139,31 +140,29 @@ app.put("/api/students/:studentId",async (req, res) => {
       cohort: req.body.cohort
     }
   )
-  res.json(response)
+  res.status(202).json(response)
   }
-  
-  catch (error){
-    console.log(error)
+  catch (error) {
+      next(error)
   }
 })
 
-//borrar
-app.delete("/api/students/:studentId",async (req, res) => {
+//Borrar (FUNCIONA)
+app.delete("/api/students/:studentId",async (req, res, next) => {
   try{
-    const response = await Student.delete(req.params.studentId, {
-      
-    }
-  )
-  res.json(response)
+      await Student.findByIdAndDelete(req.params.studentId)
+
+      res.status(202).json("Se borró el elemento")
+
   }
   
   catch (error){
-    console.log(error)
+    next(error)
   }
 })
 
-//crea un cohorte
-app.post("/api/cohort",async (req, res) => {
+//Crea un cohorte (FUNCIONA)
+app.post("/api/cohort",async (req, res, next) => {
   try{
     const created = await Cohort.create({
       cohortSlug: req.body.cohortSlug,
@@ -181,38 +180,38 @@ app.post("/api/cohort",async (req, res) => {
     res.status(201).json(created)
   }
   catch (error){
-    console.log(error)
-    res.status(500).json("Error creando cohort")
+    next(error)
+ 
   }
   })
 
-  //recuperar cohort
-  app.get("/api/cohorts", async (req, res) => {
+  //recuperar cohort (FUNCIONA)
+  app.get("/api/cohorts", async (req, res, next) => {
     try{
     const response =  await  Cohort.find()
-      res.json(response)
+      res.status(200).json(response)
   
     }
     catch (error){
-      console.log(error) 
+      next(error) 
     }
   })
 
-  //recupera un cohorte especifico
+  //recupera un cohorte especifico (FUNCIONA)
 
-  app.get("/api/cohorts/:cohortId", async (req, res) => {
+  app.get("/api/cohorts/:cohortId", async (req, res, next) => {
     try{
       const response = await Cohort.findById(req.params.cohortId)
-      res.json(response)
+      res.status(200).json(response)
       
     }
     catch (error){
-      console.log(error)
+      next(error)
     }
   })
 
-  //! actualiza un cohorte especifico por id
-  app.put("/api/cohorts/:cohortId",async (req, res) => {
+  // actualiza un cohorte especifico por id (FUNCIONA)
+  app.put("/api/cohorts/:cohortId",async (req, res, next) => {
     try{
       const response = await Cohort.findByIdAndUpdate(req.params.cohortId, {
         cohortSlug: req.body.cohortSlug,
@@ -228,27 +227,38 @@ app.post("/api/cohort",async (req, res) => {
         totalHours: req.body.totalHours
       }
     )
-    res.json(response)
+    res.status(202).json(response)
     }
     
     catch (error){
-      console.log(error)
+      next(error)
     }
   })
 
-  //delete cohorte
-  app.delete("/api/cohorts/:cohortsId",async (req, res) => {
+  //delete cohorte (FUNCIONA)
+  app.delete("/api/cohorts/:cohortId",async (req, res, next) => {
     try{
-      const response = await Cohort.delete(req.params.cohortId, {
-        
-      }
-    )
-    res.json(response)
+        await Cohort.findByIdAndDelete(req.params.cohortId)
+
+        res.status(202).json("Se borró el cohort")
     }
     
     catch (error){
-      console.log(error)
+      next(error)
     }
+  })
+
+
+  // GESTIÓN DE ERRORES
+
+  app.use((req,res) => {
+      res.status(404).json({errorMensage: "No existe la ruta indicada"})
+  })
+
+  app.use((error,req,res,next) => {
+      console.log(error)
+      res.status(500).json({errorMensage: "Error en el servidor"})
+      //res.sendStatus(500)
   })
 
 // START SERVER
