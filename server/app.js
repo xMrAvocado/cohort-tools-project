@@ -88,8 +88,10 @@ catch (error){
 //recuperar todos los estudiantes (FUNCIONA)
 app.get("/api/students", async (req, res, next) => {
   
-  console.log(patata)
+  
   try{
+    
+  console.log(patata)
   const response =  await  Student.find().populate("cohort")
     res.status(200).json(response)
 
