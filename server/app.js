@@ -51,25 +51,16 @@ app.get("/docs", (req, res) => {
   res.sendFile(__dirname + "/views/docs.html");
 });
 
-app.get(`/api/cohorts`,(req,res)=>{
-  Cohort.find({})
-  .then((cohorts) => {
-    console.log("Estamos dentro del Then Cohorts")
-    res.json(cohorts);})
-  .catch((error) => {
-    console.log("Error",error)
-    res.status(500).json({error: "Failed to retrieve Cohorts"})})
-})
+// app.get(`/api/cohorts`,(req,res)=>{
+//   Cohort.find({})
+//   .then((cohorts) => {
+//     console.log("Estamos dentro del Then Cohorts")
+//     res.json(cohorts);})
+//   .catch((error) => {
+//     console.log("Error",error)
+//     res.status(500).json({error: "Failed to retrieve Cohorts"})})
+// })
 
-app.get(`/api/students`,(req, res)=>{
-  Student.find({})
-  .then((students) => {
-    console.log("Estamos dentro del Then Students")
-    res.json(students);})
-  .catch((error) => {
-    console.log("Error",error)
-    res.status(500).json({error: "Failed to retrieve Students"})})
-})
 
 //crear estudiante
 app.post("/api/students",async (req, res) => {
