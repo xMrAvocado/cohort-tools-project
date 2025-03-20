@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const Student = require(`./models/Student.model`);
+const Student = require(`../models/Student.model`);
 
 //crear estudiante (FUNCIONA)
-router.post("/api/students", async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   try {
     const created = await Student.create({
       firstName: req.body.firstName,
@@ -26,9 +26,9 @@ router.post("/api/students", async (req, res, next) => {
 });
 
 //recuperar todos los estudiantes (FUNCIONA)
-router.get("/api/students", async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
-    console.log(patata);
+    //cabron console.log(patata);
     const response = await Student.find().populate("cohort");
     res.status(200).json(response);
   } catch (error) {
@@ -38,7 +38,7 @@ router.get("/api/students", async (req, res, next) => {
 
 //recuperar los estudiantes de un cohort determinada (id) (FUNCIONA)
 
-router.get("/api/students/cohort/:cohortId", async (req, res, next) => {
+router.get("/cohort/:cohortId", async (req, res, next) => {
   try {
     const response = await Student.find({
       cohort: req.params.cohortId,
@@ -50,7 +50,7 @@ router.get("/api/students/cohort/:cohortId", async (req, res, next) => {
 });
 
 //recupera un estudiante id (FUNCIONA)
-router.get("/api/students/:studentId", async (req, res, next) => {
+router.get("/:studentId", async (req, res, next) => {
   try {
     const response = await Student.findById(req.params.studentId).populate(
       "cohort"
@@ -62,7 +62,7 @@ router.get("/api/students/:studentId", async (req, res, next) => {
 });
 
 // Actualizar un estudianto por ID (FUNCIONA)
-router.put("/api/students/:studentId", async (req, res, next) => {
+router.put("/:studentId", async (req, res, next) => {
   try {
     const response = await Student.findByIdAndUpdate(req.params.studentId, {
       firstName: req.body.firstName,
@@ -84,7 +84,7 @@ router.put("/api/students/:studentId", async (req, res, next) => {
 });
 
 //Borrar (FUNCIONA)
-router.delete("/api/students/:studentId", async (req, res, next) => {
+router.delete("/:studentId", async (req, res, next) => {
   try {
     await Student.findByIdAndDelete(req.params.studentId);
 
