@@ -5,6 +5,9 @@ router.get("/", (req, res, next) => {
   res.status(418).json({ message: "all good here!" });
 });
 
+const authRouter = require("./auth.routes")
+router.use("/auth", authRouter)
+
 router.get("/docs", (req, res) => {
   res.sendFile(__dirname + "/views/docs.html");
 });
